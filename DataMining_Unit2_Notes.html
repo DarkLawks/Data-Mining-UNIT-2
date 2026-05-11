@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Mining – Unit 2 Notes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600;700&family=Source+Code+Pro&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b27;
+    --card: #1c2133;
+    --border: #252d45;
+    --accent1: #60a5fa;
+    --accent2: #34d399;
+    --accent3: #fbbf24;
+    --accent4: #f472b6;
+    --accent5: #a78bfa;
+    --accent6: #38bdf8;
+    --text: #dde4f0;
+    --muted: #8899b8;
+    --heading: #f1f5f9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    padding-bottom: 60px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #111827 50%, #0a1628 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 56px 40px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 60%, rgba(96,165,250,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero .label {
+    display: inline-block;
+    background: rgba(96,165,250,.12);
+    color: var(--accent1);
+    border: 1px solid rgba(96,165,250,.35);
+    border-radius: 20px;
+    padding: 4px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: 'Merriweather', serif;
+    font-size: clamp(26px, 4.5vw, 46px);
+    color: var(--heading);
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .hero p { color: var(--muted); font-size: 15px; max-width: 600px; margin: 0 auto; }
+
+  /* TOC */
+  .toc-wrap { max-width: 960px; margin: 36px auto 0; padding: 0 24px; }
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+  }
+  .toc h2 {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent1); margin-bottom: 16px;
+  }
+  .toc ol {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px,1fr));
+    gap: 6px 24px; padding-left: 20px;
+  }
+  .toc li a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s; }
+  .toc li a:hover { color: var(--accent1); }
+
+  /* MAIN */
+  main { max-width: 960px; margin: 0 auto; padding: 48px 24px 0; display: flex; flex-direction: column; gap: 44px; }
+
+  /* SECTION CARD */
+  .sc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .sc-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 22px 30px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sc-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: grid; place-items: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .sc-head h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 20px; color: var(--heading); line-height: 1.3;
+  }
+  .sc-body { padding: 26px 30px; }
+
+  /* color themes */
+  .c1 .sc-icon { background: rgba(96,165,250,.13); color: var(--accent1); }
+  .c1 .sc-head { background: rgba(96,165,250,.03); }
+  .c1 h3 { color: var(--accent1); }
+
+  .c2 .sc-icon { background: rgba(52,211,153,.13); color: var(--accent2); }
+  .c2 .sc-head { background: rgba(52,211,153,.03); }
+  .c2 h3 { color: var(--accent2); }
+
+  .c3 .sc-icon { background: rgba(251,191,36,.13); color: var(--accent3); }
+  .c3 .sc-head { background: rgba(251,191,36,.03); }
+  .c3 h3 { color: var(--accent3); }
+
+  .c4 .sc-icon { background: rgba(244,114,182,.13); color: var(--accent4); }
+  .c4 .sc-head { background: rgba(244,114,182,.03); }
+  .c4 h3 { color: var(--accent4); }
+
+  .c5 .sc-icon { background: rgba(167,139,250,.13); color: var(--accent5); }
+  .c5 .sc-head { background: rgba(167,139,250,.03); }
+  .c5 h3 { color: var(--accent5); }
+
+  .c6 .sc-icon { background: rgba(56,189,248,.13); color: var(--accent6); }
+  .c6 .sc-head { background: rgba(56,189,248,.03); }
+  .c6 h3 { color: var(--accent6); }
+
+  .c7 .sc-icon { background: rgba(251,113,133,.13); color: #fb7185; }
+  .c7 .sc-head { background: rgba(251,113,133,.03); }
+  .c7 h3 { color: #fb7185; }
+
+  .c8 .sc-icon { background: rgba(74,222,128,.13); color: #4ade80; }
+  .c8 .sc-head { background: rgba(74,222,128,.03); }
+  .c8 h3 { color: #4ade80; }
+
+  .c9 .sc-icon { background: rgba(253,186,116,.13); color: #fdba74; }
+  .c9 .sc-head { background: rgba(253,186,116,.03); }
+  .c9 h3 { color: #fdba74; }
+
+  /* SUBSECTION */
+  .sub { margin-bottom: 30px; }
+  .sub:last-child { margin-bottom: 0; }
+  .sub h3 {
+    font-size: 14px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    margin-bottom: 14px; padding-bottom: 7px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sub h4 { font-size: 15px; font-weight: 700; color: var(--heading); margin: 16px 0 6px; }
+  p { margin-bottom: 10px; }
+
+  /* GRIDS */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  .g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 14px; }
+  .g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 14px; }
+  @media(max-width:700px){
+    .g2,.g3,.g4{ grid-template-columns:1fr; }
+    .sc-body { padding: 18px; }
+    .sc-head { padding: 16px 18px; }
+    .hero { padding: 36px 20px 28px; }
+    .toc ol { grid-template-columns: 1fr; }
+  }
+
+  /* MINI CARD */
+  .mc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .mc .mc-t { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .mc p { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* DEF LIST */
+  .dl { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .di {
+    background: var(--surface);
+    border-left: 3px solid;
+    border-radius: 0 9px 9px 0;
+    padding: 11px 16px;
+  }
+  .di .term { font-weight: 700; color: var(--heading); font-size: 15px; }
+  .di .def { font-size: 14px; color: var(--muted); margin-top: 3px; }
+  .di .def ul { padding-left: 18px; margin-top: 4px; }
+  .di .def li { margin-bottom: 3px; }
+
+  /* CALLOUT */
+  .co { border-radius: 10px; padding: 14px 18px; margin-top: 14px; font-size: 14px; }
+  .co.info { background: rgba(96,165,250,.07); border: 1px solid rgba(96,165,250,.25); }
+  .co.tip  { background: rgba(52,211,153,.07); border: 1px solid rgba(52,211,153,.25); }
+  .co.warn { background: rgba(251,191,36,.07); border: 1px solid rgba(251,191,36,.25); }
+  .co.pink { background: rgba(244,114,182,.07); border: 1px solid rgba(244,114,182,.25); }
+  .co strong { display: block; margin-bottom: 4px; }
+  .co.info strong { color: var(--accent1); }
+  .co.tip  strong { color: var(--accent2); }
+  .co.warn strong { color: var(--accent3); }
+  .co.pink strong { color: var(--accent4); }
+
+  /* STEPS */
+  .steps { counter-reset: stp; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .stp { display: flex; gap: 14px; }
+  .stp::before {
+    counter-increment: stp; content: counter(stp);
+    flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--accent1); font-weight: 700; font-size: 13px;
+    display: grid; place-items: center; margin-top: 2px;
+  }
+  .stp-c { font-size: 14px; }
+  .stp-c strong { color: var(--heading); }
+
+  /* TABLE */
+  .tbl { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 14px; overflow-x: auto; display: block; }
+  .tbl th {
+    background: var(--surface); color: var(--heading);
+    padding: 10px 14px; text-align: left;
+    border: 1px solid var(--border);
+    font-size: 13px; text-transform: uppercase; letter-spacing: .05em;
+    white-space: nowrap;
+  }
+  .tbl td { padding: 10px 14px; border: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  .tbl tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+  .tbl td code, .tbl th code { font-size: 12px; }
+
+  /* BULLETS */
+  ul.b { padding-left: 20px; color: var(--muted); font-size: 14px; }
+  ul.b li { margin-bottom: 5px; }
+  ul.b li strong { color: var(--heading); }
+
+  /* CODE */
+  code {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 7px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px; color: var(--accent2);
+  }
+
+  /* FORMULA */
+  .fml {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 20px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px; color: var(--accent3);
+    margin-top: 10px; text-align: center;
+  }
+
+  /* TAGS */
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .tag {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 13px;
+    font-size: 13px; color: var(--muted);
+  }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    border-radius: 6px; padding: 2px 9px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .04em; margin-left: 6px;
+  }
+  .badge.g { background: rgba(52,211,153,.15); color: var(--accent2); }
+  .badge.r { background: rgba(251,113,133,.15); color: #fb7185; }
+  .badge.y { background: rgba(251,191,36,.15); color: var(--accent3); }
+
+  /* KEY FORMULA BOX */
+  .key-formula {
+    border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; margin-top: 14px;
+  }
+  .kf-head {
+    background: var(--surface); padding: 8px 16px;
+    font-size: 12px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .kf-body { padding: 14px 16px; }
+  .kf-row { display: flex; gap: 12px; align-items: baseline; margin-bottom: 8px; }
+  .kf-row:last-child { margin-bottom: 0; }
+  .kf-label { font-size: 13px; font-weight: 700; color: var(--heading); min-width: 90px; flex-shrink: 0; }
+  .kf-val { font-family: 'Source Code Pro', monospace; font-size: 13px; color: var(--accent3); }
+  .kf-note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* HIGHLIGHT ROW */
+  .hl td { background: rgba(96,165,250,.06) !important; color: var(--heading) !important; font-weight: 600; }
+  .hl2 td { background: rgba(52,211,153,.06) !important; color: var(--heading) !important; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="label">Unit 2</div>
+  <h1>Associations & Correlations</h1>
+  <p>Market Basket Analysis · Apriori · FP-Growth · ECLAT · Closed Itemsets · Multilevel & Multidimensional Rules · Correlation Analysis · Constraint-Based Mining</p>
+</div>
+
+<!-- TOC -->
+<div class="toc-wrap">
+  <div class="toc">
+    <h2>📋 Contents</h2>
+    <ol>
+      <li><a href="#mba">Market Basket Analysis</a></li>
+      <li><a href="#metrics">Key Metrics (Support, Confidence, Lift)</a></li>
+      <li><a href="#apriori">Apriori Algorithm</a></li>
+      <li><a href="#apriori-num">Apriori — Full Numerical Example</a></li>
+      <li><a href="#fp">FP-Growth (Without Candidate Generation)</a></li>
+      <li><a href="#eclat">ECLAT — Vertical Data Format</a></li>
+      <li><a href="#closed">Mining Closed Frequent Itemsets</a></li>
+      <li><a href="#multilevel">Mining Multilevel Association Rules</a></li>
+      <li><a href="#multidim">Mining Multidimensional Association Rules</a></li>
+      <li><a href="#correlation">Correlation Analysis</a></li>
+      <li><a href="#constraint">Constraint-Based Association Mining</a></li>
+    </ol>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 1. MARKET BASKET ANALYSIS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c1" id="mba">
+  <div class="sc-head">
+    <div class="sc-icon">🛒</div>
+    <h2>1. Market Basket Analysis (MBA)</h2>
+  </div>
+  <div class="sc-body">
+    <p><strong>Market Basket Analysis</strong> is a data mining technique used to discover <em>patterns and relationships between items frequently purchased together</em>. It is based on <strong>Association Rule Mining</strong> and is widely used in retail, e-commerce, and recommendation systems.</p>
+
+    <div class="sub">
+      <h3>Real-World Example</h3>
+      <p>If many customers who buy <strong>Bread</strong> also buy <strong>Butter</strong>, a retailer can:</p>
+      <ul class="b">
+        <li>Place Bread and Butter close together in the store.</li>
+        <li>Offer a discount on Butter when Bread is purchased.</li>
+        <li>Recommend Butter to online shoppers who add Bread to their cart.</li>
+      </ul>
+    </div>
+
+    <div class="sub">
+      <h3>Key Concepts</h3>
+      <div class="dl">
+        <div class="di" style="border-color:var(--accent1)">
+          <div class="term">Transactional Dataset</div>
+          <div class="def">Each row = one transaction. Each transaction = set of items bought together.<br>
+          <strong>Example:</strong>
+          <table class="tbl" style="margin-top:8px">
+            <tr><th>Transaction ID</th><th>Items Bought</th></tr>
+            <tr><td>T1</td><td>Milk, Bread, Butter</td></tr>
+            <tr><td>T2</td><td>Milk, Bread</td></tr>
+            <tr><td>T3</td><td>Bread, Butter, Jam</td></tr>
+            <tr><td>T4</td><td>Milk, Butter</td></tr>
+          </table>
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent1)">
+          <div class="term">Association Rule</div>
+          <div class="def">A rule written as <strong>A ⇒ B</strong>, meaning "if a customer buys A, they are likely to also buy B." <br>Example: {Bread} ⇒ {Butter}</div>
+        </div>
+        <div class="di" style="border-color:var(--accent1)">
+          <div class="term">Itemset</div>
+          <div class="def">A collection of one or more items. A <strong>frequent itemset</strong> is one that appears in at least a minimum number of transactions (≥ min support).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Applications of MBA</h3>
+      <div class="g3">
+        <div class="mc"><div class="mc-t" style="color:var(--accent1)">🏬 Retail</div><p>Optimize product placement, design combo offers (burger + fries + drink).</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent1)">🛍️ E-commerce</div><p>Amazon's "Customers who bought this also bought..." recommendation engine.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent1)">🏥 Healthcare</div><p>Analyze prescription patterns, detect potential drug interactions.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent1)">💳 Finance</div><p>Identify fraudulent transactions based on unusual purchase patterns.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent1)">📱 Telecom</div><p>Bundle mobile services based on customer preferences.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent1)">🎬 Streaming</div><p>Netflix and Spotify recommend content based on viewing/listening history.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 2. KEY METRICS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c2" id="metrics">
+  <div class="sc-head">
+    <div class="sc-icon">📏</div>
+    <h2>2. Key Metrics — Support, Confidence &amp; Lift</h2>
+  </div>
+  <div class="sc-body">
+    <p>These three metrics measure the strength and significance of association rules. <strong>Always memorize these — they appear in every exam question.</strong></p>
+
+    <div class="sub">
+      <h3>1. Support</h3>
+      <p>Measures how <strong>frequently</strong> an itemset appears across all transactions. Tells us if the rule is based on enough data.</p>
+      <div class="key-formula">
+        <div class="kf-head">Formula</div>
+        <div class="kf-body">
+          <div class="kf-row"><span class="kf-label">Support(A⇒B)</span><span class="kf-val">= Transactions containing both A and B / Total Transactions</span></div>
+          <div class="kf-row"><span class="kf-label">Support(A)</span><span class="kf-val">= Transactions containing A / Total Transactions</span></div>
+        </div>
+      </div>
+      <div class="co info" style="margin-top:12px">
+        <strong>Example</strong>
+        5 total transactions. {Bread, Butter} appears in 2 → Support = 2/5 = 40%
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>2. Confidence</h3>
+      <p>Measures how often the rule is correct. "Given A is bought, how likely is B also bought?" — it is the <em>conditional probability</em> of B given A.</p>
+      <div class="key-formula">
+        <div class="kf-head">Formula</div>
+        <div class="kf-body">
+          <div class="kf-row"><span class="kf-label">Confidence(A⇒B)</span><span class="kf-val">= Support(A and B) / Support(A)</span></div>
+        </div>
+      </div>
+      <div class="co info" style="margin-top:12px">
+        <strong>Example</strong>
+        Support({Milk, Bread}) = 40%, Support({Milk}) = 60% → Confidence = 40%/60% = 66.7%
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>3. Lift</h3>
+      <p>Measures how much <strong>more likely</strong> B is purchased when A is purchased, compared to if A and B were independent. Lift corrects for item popularity.</p>
+      <div class="key-formula">
+        <div class="kf-head">Formula</div>
+        <div class="kf-body">
+          <div class="kf-row"><span class="kf-label">Lift(A⇒B)</span><span class="kf-val">= Confidence(A⇒B) / Support(B)</span></div>
+        </div>
+      </div>
+      <div class="g3" style="margin-top:12px">
+        <div class="mc"><div class="mc-t" style="color:var(--accent2)">Lift &gt; 1 ✅</div><p>A and B are <strong>positively correlated</strong>. Buying A increases likelihood of B.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--muted)">Lift = 1 ⚪</div><p>A and B are <strong>independent</strong>. No relationship.</p></div>
+        <div class="mc"><div class="mc-t" style="color:#fb7185">Lift &lt; 1 ❌</div><p>A and B are <strong>negatively correlated</strong>. Buying A reduces likelihood of B.</p></div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Quick Summary Table</h3>
+      <table class="tbl">
+        <tr><th>Metric</th><th>What it Measures</th><th>Formula</th><th>Range</th></tr>
+        <tr><td><strong>Support</strong></td><td>Frequency of itemset in database</td><td>Txns with (A,B) / Total Txns</td><td>0 to 1</td></tr>
+        <tr><td><strong>Confidence</strong></td><td>Rule accuracy (P(B|A))</td><td>Support(A,B) / Support(A)</td><td>0 to 1</td></tr>
+        <tr><td><strong>Lift</strong></td><td>Strength beyond independence</td><td>Confidence(A⇒B) / Support(B)</td><td>&gt;0 (1=independent)</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 3. APRIORI ALGORITHM -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c3" id="apriori">
+  <div class="sc-head">
+    <div class="sc-icon">⚙️</div>
+    <h2>3. Apriori Algorithm</h2>
+  </div>
+  <div class="sc-body">
+    <p>The <strong>Apriori Algorithm</strong> is the most widely used algorithm for Association Rule Mining. It mines frequent itemsets iteratively from a transactional database using a <strong>bottom-up approach</strong> — starting from single items and building up to larger itemsets.</p>
+
+    <div class="sub">
+      <h3>The Apriori Property (Anti-Monotone Property)</h3>
+      <div class="co warn">
+        <strong>📌 Key Property — Must Remember</strong>
+        "If an itemset is frequent, then ALL of its subsets must also be frequent."<br>
+        Equivalently: "If a subset of an itemset is NOT frequent, then the entire itemset CANNOT be frequent."<br>
+        This allows <strong>pruning</strong> — we can skip (prune) candidate itemsets that have infrequent subsets, greatly improving efficiency.
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Steps of the Apriori Algorithm</h3>
+      <div class="steps">
+        <div class="stp"><div class="stp-c"><strong>Set Thresholds:</strong> Define minimum support and minimum confidence values before starting.</div></div>
+        <div class="stp"><div class="stp-c"><strong>Generate Frequent 1-Itemsets (L1):</strong> Scan the database, count frequency of each individual item. Keep only items with support ≥ min_support.</div></div>
+        <div class="stp"><div class="stp-c"><strong>Generate Candidate 2-Itemsets (C2):</strong> Combine all pairs from L1. Then scan the database to count their support.</div></div>
+        <div class="stp"><div class="stp-c"><strong>Prune:</strong> Remove any candidate whose support &lt; min_support. The remaining set = L2 (frequent 2-itemsets).</div></div>
+        <div class="stp"><div class="stp-c"><strong>Repeat:</strong> Continue generating and pruning k-itemsets until no new frequent itemsets are found.</div></div>
+        <div class="stp"><div class="stp-c"><strong>Generate Association Rules:</strong> From each frequent itemset, generate all possible rules. Keep only rules with confidence ≥ min_confidence.</div></div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Advantages &amp; Disadvantages</h3>
+      <div class="g2">
+        <div class="mc">
+          <div class="mc-t" style="color:var(--accent2)">✅ Advantages</div>
+          <ul class="b">
+            <li>Simple and easy to understand</li>
+            <li>Guaranteed to find all frequent itemsets</li>
+            <li>Pruning greatly reduces search space</li>
+          </ul>
+        </div>
+        <div class="mc">
+          <div class="mc-t" style="color:#fb7185">❌ Disadvantages</div>
+          <ul class="b">
+            <li>Requires <strong>multiple scans</strong> of the dataset</li>
+            <li>Generates a large number of candidate itemsets</li>
+            <li>Slow for very large datasets</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 4. APRIORI FULL NUMERICAL EXAMPLE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c4" id="apriori-num">
+  <div class="sc-head">
+    <div class="sc-icon">🔢</div>
+    <h2>4. Apriori — Complete Numerical Example</h2>
+  </div>
+  <div class="sc-body">
+    <p>This example covers the full Apriori algorithm from start to finish including pruning and association rule generation. <strong>Min Support = 2 (support count), Min Confidence = 60%.</strong></p>
+
+    <div class="sub">
+      <h3>Given Dataset</h3>
+      <table class="tbl">
+        <tr><th>Transaction ID</th><th>Items</th></tr>
+        <tr><td>T1</td><td>I1, I3, I4</td></tr>
+        <tr><td>T2</td><td>I2, I3, I5, I6</td></tr>
+        <tr><td>T3</td><td>I1, I2, I3, I5</td></tr>
+        <tr><td>T4</td><td>I2, I5</td></tr>
+        <tr><td>T5</td><td>I1, I3, I5</td></tr>
+      </table>
+      <p style="margin-top:8px;font-size:14px">Total transactions = 5 | Min Support Count = 2</p>
+    </div>
+
+    <div class="sub">
+      <h3>Step 1: Frequent 1-Itemsets</h3>
+      <p>Scan database and count support for each individual item.</p>
+      <table class="tbl">
+        <tr><th>Itemset</th><th>Support Count</th><th>Frequent?</th></tr>
+        <tr><td>{I1}</td><td>3</td><td>✅ Yes</td></tr>
+        <tr><td>{I2}</td><td>3</td><td>✅ Yes</td></tr>
+        <tr><td>{I3}</td><td>4</td><td>✅ Yes</td></tr>
+        <tr><td>{I4}</td><td>1</td><td>❌ No (pruned)</td></tr>
+        <tr><td>{I5}</td><td>4</td><td>✅ Yes</td></tr>
+        <tr><td>{I6}</td><td>1</td><td>❌ No (pruned)</td></tr>
+      </table>
+      <div class="co tip"><strong>L1 (Frequent 1-Itemsets)</strong> = {I1}, {I2}, {I3}, {I5} &nbsp;|&nbsp; {I4} and {I6} are pruned (support &lt; 2)</div>
+    </div>
+
+    <div class="sub">
+      <h3>Step 2: Candidate and Frequent 2-Itemsets</h3>
+      <p>Join all pairs from L1 to generate C2 candidates. Then count support for each.</p>
+      <table class="tbl">
+        <tr><th>Itemset</th><th>Support Count</th><th>Frequent?</th></tr>
+        <tr><td>{I1, I2}</td><td>1</td><td>❌ No (pruned)</td></tr>
+        <tr class="hl2"><td>{I1, I3}</td><td>3</td><td>✅ Yes</td></tr>
+        <tr class="hl2"><td>{I1, I5}</td><td>2</td><td>✅ Yes</td></tr>
+        <tr class="hl2"><td>{I2, I3}</td><td>2</td><td>✅ Yes</td></tr>
+        <tr class="hl2"><td>{I2, I5}</td><td>3</td><td>✅ Yes</td></tr>
+        <tr class="hl2"><td>{I3, I5}</td><td>3</td><td>✅ Yes</td></tr>
+      </table>
+      <div class="co tip"><strong>L2</strong> = {I1,I3}, {I1,I5}, {I2,I3}, {I2,I5}, {I3,I5} &nbsp;|&nbsp; {I1,I2} pruned.</div>
+    </div>
+
+    <div class="sub">
+      <h3>Step 3: Candidate 3-Itemsets with Pruning</h3>
+      <p>Join L2 items to create C3 candidates, then check if ALL 2-item subsets are in L2.</p>
+      <table class="tbl">
+        <tr><th>Candidate</th><th>2-Item Subsets</th><th>All in L2?</th><th>Result</th></tr>
+        <tr class="hl2"><td>{I1, I3, I5}</td><td>{I1,I3} ✅ {I1,I5} ✅ {I3,I5} ✅</td><td>Yes</td><td>✅ Keep</td></tr>
+        <tr><td>{I1, I2, I3}</td><td>{I1,I2} ❌ {I1,I3} ✅ {I2,I3} ✅</td><td>No</td><td>❌ Pruned</td></tr>
+        <tr><td>{I1, I2, I5}</td><td>{I1,I2} ❌ {I1,I5} ✅ {I2,I5} ✅</td><td>No</td><td>❌ Pruned</td></tr>
+        <tr class="hl2"><td>{I2, I3, I5}</td><td>{I2,I3} ✅ {I2,I5} ✅ {I3,I5} ✅</td><td>Yes</td><td>✅ Keep</td></tr>
+      </table>
+      <p style="margin-top:10px;font-size:14px">Now count support for the kept candidates:</p>
+      <table class="tbl">
+        <tr><th>Itemset</th><th>Support Count</th></tr>
+        <tr><td>{I1, I3, I5}</td><td>2 ✅</td></tr>
+        <tr><td>{I2, I3, I5}</td><td>2 ✅</td></tr>
+      </table>
+      <div class="co tip"><strong>L3</strong> = {I1,I3,I5}, {I2,I3,I5}</div>
+    </div>
+
+    <div class="sub">
+      <h3>Step 4: Attempt 4-Itemsets</h3>
+      <p>Join L3 → {I1,I2,I3,I5}. Check 3-item subsets: {I1,I2,I3} ❌ and {I1,I2,I5} ❌ are NOT in L3. So this is <strong>pruned</strong>. No 4-itemset exists. <strong>Algorithm stops.</strong></p>
+    </div>
+
+    <div class="sub">
+      <h3>All Frequent Itemsets Summary</h3>
+      <table class="tbl">
+        <tr><th>Level</th><th>Itemset</th><th>Support Count</th></tr>
+        <tr><td rowspan="4">1-Itemsets</td><td>{I1}</td><td>3</td></tr>
+        <tr><td>{I2}</td><td>3</td></tr>
+        <tr><td>{I3}</td><td>4</td></tr>
+        <tr><td>{I5}</td><td>4</td></tr>
+        <tr><td rowspan="5">2-Itemsets</td><td>{I1,I3}</td><td>3</td></tr>
+        <tr><td>{I1,I5}</td><td>2</td></tr>
+        <tr><td>{I2,I3}</td><td>2</td></tr>
+        <tr><td>{I2,I5}</td><td>3</td></tr>
+        <tr><td>{I3,I5}</td><td>3</td></tr>
+        <tr><td rowspan="2">3-Itemsets</td><td>{I1,I3,I5}</td><td>2</td></tr>
+        <tr><td>{I2,I3,I5}</td><td>2</td></tr>
+      </table>
+    </div>
+
+    <div class="sub">
+      <h3>Step 5: Generate Association Rules with Confidence</h3>
+      <p>For each frequent itemset, generate all possible A⇒B rules. Confidence = Support(A∪B) / Support(A).</p>
+      <table class="tbl">
+        <tr><th>Association Rule</th><th>Confidence Calculation</th><th>Confidence</th></tr>
+        <tr><td>{I1}→{I3}</td><td>3/3</td><td>100%</td></tr>
+        <tr><td>{I3}→{I1}</td><td>3/4</td><td>75%</td></tr>
+        <tr><td>{I1}→{I5}</td><td>2/3</td><td>66.67%</td></tr>
+        <tr><td>{I5}→{I1}</td><td>2/4</td><td>50%</td></tr>
+        <tr><td>{I2}→{I3}</td><td>2/3</td><td>66.67%</td></tr>
+        <tr><td>{I3}→{I2}</td><td>2/4</td><td>50%</td></tr>
+        <tr><td>{I2}→{I5}</td><td>3/3</td><td>100%</td></tr>
+        <tr><td>{I5}→{I2}</td><td>3/4</td><td>75%</td></tr>
+        <tr><td>{I3}→{I5}</td><td>3/4</td><td>75%</td></tr>
+        <tr><td>{I5}→{I3}</td><td>3/4</td><td>75%</td></tr>
+        <tr><td>{I2,I3}→{I5}</td><td>2/2</td><td>100%</td></tr>
+        <tr><td>{I2,I5}→{I3}</td><td>2/3</td><td>66.67%</td></tr>
+        <tr><td>{I3,I5}→{I2}</td><td>2/3</td><td>66.67%</td></tr>
+        <tr><td>{I1,I3}→{I5}</td><td>2/3</td><td>66.67%</td></tr>
+        <tr><td>{I1,I5}→{I3}</td><td>2/2</td><td>100%</td></tr>
+        <tr><td>{I3,I5}→{I1}</td><td>2/3</td><td>66.67%</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 5. FP-GROWTH -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c5" id="fp">
+  <div class="sc-head">
+    <div class="sc-icon">🌳</div>
+    <h2>5. FP-Growth — Mining Without Candidate Generation</h2>
+  </div>
+  <div class="sc-body">
+    <p>The <strong>FP-Growth (Frequent Pattern Growth)</strong> algorithm was designed to overcome the major bottleneck of Apriori — the need for candidate generation and multiple database scans. It uses a compact tree structure called an <strong>FP-Tree</strong>.</p>
+
+    <div class="sub">
+      <h3>Why Avoid Candidate Generation?</h3>
+      <p>The Apriori approach suffers from:</p>
+      <ul class="b">
+        <li><strong>Multiple database scans</strong> — increases time complexity significantly.</li>
+        <li><strong>Huge candidate sets</strong> — exponential number of candidate itemsets to check.</li>
+        <li><strong>High memory usage</strong> — storing and checking all candidates is expensive.</li>
+      </ul>
+      <p>FP-Growth solves this by <strong>compressing the entire database into an FP-Tree</strong> in just <strong>two scans</strong>, then mining frequent patterns directly from the tree.</p>
+    </div>
+
+    <div class="sub">
+      <h3>How FP-Growth Works</h3>
+      <div class="steps">
+        <div class="stp"><div class="stp-c"><strong>First Database Scan:</strong> Count frequency of each item. Discard items below min_support. Sort remaining items in <strong>descending order of frequency</strong>.</div></div>
+        <div class="stp"><div class="stp-c"><strong>Build FP-Tree:</strong> Second scan — insert each transaction into the tree. Common prefixes are shared, saving memory. Each node stores: item name + count.</div></div>
+        <div class="stp"><div class="stp-c"><strong>Mine FP-Tree:</strong> For each item (starting from least frequent), find all its <strong>conditional pattern bases</strong> (prefix paths leading to that item in the tree).</div></div>
+        <div class="stp"><div class="stp-c"><strong>Build Conditional FP-Tree:</strong> Construct a smaller FP-Tree for each item using its conditional pattern base.</div></div>
+        <div class="stp"><div class="stp-c"><strong>Recursively Extract Patterns:</strong> Mine each conditional FP-Tree to extract frequent itemsets. No candidate generation needed at any step.</div></div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>FP-Growth vs Apriori — Comparison</h3>
+      <table class="tbl">
+        <tr><th>Feature</th><th>Apriori</th><th>FP-Growth</th></tr>
+        <tr><td>Database Scans</td><td>Multiple (one per itemset size)</td><td>Only 2 scans</td></tr>
+        <tr><td>Candidate Generation</td><td>Yes — expensive</td><td>No — eliminated</td></tr>
+        <tr><td>Data Structure</td><td>Simple lists</td><td>FP-Tree (compressed)</td></tr>
+        <tr><td>Speed</td><td>Slow for large datasets</td><td>Much faster</td></tr>
+        <tr><td>Memory</td><td>High (candidate sets)</td><td>Lower (compressed tree)</td></tr>
+        <tr><td>Best Used For</td><td>Small/medium datasets</td><td>Large, dense datasets</td></tr>
+      </table>
+    </div>
+
+    <div class="co tip">
+      <strong>Key Insight</strong>
+      FP-Growth = 2 database scans + tree-based recursive mining. Apriori = k database scans for k-itemsets. FP-Growth is typically 10x–100x faster than Apriori on large databases.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 6. ECLAT — VERTICAL DATA FORMAT -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c6" id="eclat">
+  <div class="sc-head">
+    <div class="sc-icon">🗂️</div>
+    <h2>6. ECLAT — Mining Using Vertical Data Format</h2>
+  </div>
+  <div class="sc-body">
+    <p><strong>ECLAT (Equivalence Class Clustering and Bottom-Up Lattice Traversal)</strong> mines frequent itemsets using a <strong>vertical data format</strong>, where instead of storing transactions as lists of items, each item stores the list of transaction IDs (TID set) in which it appears.</p>
+
+    <div class="sub">
+      <h3>Horizontal vs Vertical Format</h3>
+      <table class="tbl">
+        <tr><th>Format</th><th>Structure</th><th>Example</th></tr>
+        <tr><td>Horizontal</td><td>Transaction → Items</td><td>T1: {A, B, C} | T2: {B, C, D}</td></tr>
+        <tr><td>Vertical (ECLAT)</td><td>Item → TID set</td><td>A: {T1} | B: {T1,T2} | C: {T1,T2} | D: {T2}</td></tr>
+      </table>
+      <div class="co info" style="margin-top:12px">
+        <strong>Key Advantage</strong>
+        Support of any itemset = size of the intersection of its items' TID sets. No database scan needed — just set intersection!
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Step-by-Step ECLAT Example</h3>
+      <h4>Given Transactions:</h4>
+      <table class="tbl">
+        <tr><th>Transaction ID</th><th>Items Bought</th></tr>
+        <tr><td>1</td><td>A, B, D, E</td></tr>
+        <tr><td>2</td><td>B, C, E</td></tr>
+        <tr><td>3</td><td>A, B, C, E</td></tr>
+        <tr><td>4</td><td>B, C</td></tr>
+        <tr><td>5</td><td>A, B, C, E</td></tr>
+      </table>
+
+      <h4>Step 1: Convert to Vertical Format (TID Sets)</h4>
+      <table class="tbl">
+        <tr><th>Item</th><th>TID Set</th><th>Support</th><th>Frequent?</th></tr>
+        <tr><td>A</td><td>{1, 3, 5}</td><td>3</td><td>✅</td></tr>
+        <tr><td>B</td><td>{1, 2, 3, 4, 5}</td><td>5</td><td>✅</td></tr>
+        <tr><td>C</td><td>{2, 3, 4, 5}</td><td>4</td><td>✅</td></tr>
+        <tr><td>D</td><td>{1}</td><td>1</td><td>❌ (min_support=2)</td></tr>
+        <tr><td>E</td><td>{1, 2, 3, 5}</td><td>4</td><td>✅</td></tr>
+      </table>
+
+      <h4>Step 2: Find 2-Frequent Itemsets (Intersect TID Sets)</h4>
+      <table class="tbl">
+        <tr><th>Itemset</th><th>TID Set (Intersection)</th><th>Support</th></tr>
+        <tr><td>{A, B}</td><td>{1,3,5}</td><td>3 ✅</td></tr>
+        <tr><td>{A, C}</td><td>{3,5}</td><td>2 ✅</td></tr>
+        <tr><td>{A, E}</td><td>{1,3,5}</td><td>3 ✅</td></tr>
+        <tr><td>{B, C}</td><td>{2,3,4,5}</td><td>4 ✅</td></tr>
+        <tr><td>{B, E}</td><td>{1,2,3,5}</td><td>4 ✅</td></tr>
+        <tr><td>{C, E}</td><td>{2,3,5}</td><td>3 ✅</td></tr>
+      </table>
+
+      <h4>Step 3: Find 3-Frequent Itemsets</h4>
+      <table class="tbl">
+        <tr><th>Itemset</th><th>TID Set (Intersection)</th><th>Support</th></tr>
+        <tr><td>{A, B, E}</td><td>{1,3,5}</td><td>3 ✅</td></tr>
+        <tr><td>{B, C, E}</td><td>{2,3,5}</td><td>3 ✅</td></tr>
+      </table>
+    </div>
+
+    <div class="sub">
+      <h3>Algorithm Comparison</h3>
+      <table class="tbl">
+        <tr><th>Algorithm</th><th>Data Format</th><th>Candidate Generation?</th><th>Best For</th></tr>
+        <tr><td>Apriori</td><td>Horizontal (transaction lists)</td><td>Yes</td><td>Small datasets</td></tr>
+        <tr><td>FP-Growth</td><td>Tree structure (FP-Tree)</td><td>No</td><td>Large, dense datasets</td></tr>
+        <tr><td>ECLAT</td><td>Vertical (TID lists)</td><td>No (uses intersection)</td><td>Dense datasets, fast support counting</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 7. CLOSED FREQUENT ITEMSETS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c7" id="closed">
+  <div class="sc-head">
+    <div class="sc-icon">🔒</div>
+    <h2>7. Mining Closed Frequent Itemsets</h2>
+  </div>
+  <div class="sc-body">
+    <p>Mining ALL frequent itemsets can generate an enormous number of itemsets — many of which are redundant. <strong>Closed Frequent Itemsets (CFIs)</strong> provide a compact, lossless representation.</p>
+
+    <div class="sub">
+      <h3>Definition</h3>
+      <div class="co warn">
+        <strong>📌 Closed Frequent Itemset (CFI) — Definition</strong>
+        A frequent itemset X is <strong>closed</strong> if there is NO superset Y of X (i.e., Y ⊃ X) that has the <strong>same support</strong> as X.<br><br>
+        In simple terms: X is closed if you cannot add any more item to X without <em>reducing</em> its support count.
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Why Mine Closed Itemsets?</h3>
+      <div class="g2">
+        <div class="mc"><div class="mc-t" style="color:#fb7185">✔ Compact Representation</div><p>Significantly fewer itemsets to store — no redundancy.</p></div>
+        <div class="mc"><div class="mc-t" style="color:#fb7185">✔ No Information Loss</div><p>All knowledge present in full frequent itemset mining is preserved.</p></div>
+        <div class="mc"><div class="mc-t" style="color:#fb7185">✔ Faster Mining</div><p>Less computation time and memory usage.</p></div>
+        <div class="mc"><div class="mc-t" style="color:#fb7185">✔ Simpler Rule Generation</div><p>Easier to generate association rules from a smaller set.</p></div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Complete Example (min_support = 2)</h3>
+      <h4>Transaction Database:</h4>
+      <table class="tbl">
+        <tr><th>Transaction ID</th><th>Items Bought</th></tr>
+        <tr><td>T1</td><td>A, B, C</td></tr>
+        <tr><td>T2</td><td>A, B</td></tr>
+        <tr><td>T3</td><td>A, B, C, D</td></tr>
+        <tr><td>T4</td><td>B, C, D</td></tr>
+        <tr><td>T5</td><td>B, C</td></tr>
+      </table>
+
+      <h4>Step 1: All Frequent Itemsets (support ≥ 2):</h4>
+      <table class="tbl">
+        <tr><th>Itemset</th><th>Support</th><th>Closed?</th><th>Reason</th></tr>
+        <tr><td>{A}</td><td>3</td><td>❌ Not Closed</td><td>{A,B} has same support (3)</td></tr>
+        <tr><td>{B}</td><td>5</td><td>❌ Not Closed</td><td>{B,C} has same support (4) — wait, {B} support=5 ≠ {B,C} support=4, so actually closed. But {A,B} support=3 ≠ 5. So {B} is CLOSED. ✅</td></tr>
+        <tr><td>{C}</td><td>4</td><td>❌ Not Closed</td><td>{B,C} has same support (4)</td></tr>
+        <tr><td>{D}</td><td>2</td><td>❌ Not Closed</td><td>{B,D} or {C,D} may have same support</td></tr>
+        <tr><td>{A, B}</td><td>3</td><td>❌ Not Closed</td><td>{A,B,C} has same support (2)? No — {A,B,C} support=2 ≠ 3. So {A,B} IS closed ✅</td></tr>
+        <tr><td>{B, C}</td><td>4</td><td>✅ Closed</td><td>No superset has support = 4</td></tr>
+        <tr><td>{A, B, C}</td><td>2</td><td>✅ Closed</td><td>No superset has support = 2</td></tr>
+        <tr><td>{B, C, D}</td><td>2</td><td>✅ Closed</td><td>No superset has support = 2</td></tr>
+      </table>
+
+      <h4>Final Closed Frequent Itemsets:</h4>
+      <table class="tbl">
+        <tr><th>Closed Frequent Itemset</th><th>Support</th></tr>
+        <tr class="hl2"><td>{B, C}</td><td>4</td></tr>
+        <tr class="hl2"><td>{A, B, C}</td><td>2</td></tr>
+        <tr class="hl2"><td>{B, C, D}</td><td>2</td></tr>
+      </table>
+    </div>
+
+    <div class="co tip">
+      <strong>Quick Rule</strong>
+      To check if X is closed: find all supersets of X. If any superset has the SAME support as X → X is NOT closed. If no superset matches → X IS closed.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 8. MULTILEVEL ASSOCIATION RULES -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c2" id="multilevel">
+  <div class="sc-head">
+    <div class="sc-icon">🏗️</div>
+    <h2>8. Mining Multilevel Association Rules</h2>
+  </div>
+  <div class="sc-body">
+    <p>Traditional association rule mining finds rules at a <strong>single level</strong> (e.g., {Milk} → {Bread}). But real-world data is often organized in <strong>hierarchies</strong>. Multilevel association rule mining discovers rules at <em>different levels of abstraction</em>.</p>
+
+    <div class="sub">
+      <h3>Motivation Example</h3>
+      <p>A product hierarchy might look like:</p>
+      <div class="fml" style="text-align:left; font-family: 'Source Sans 3', sans-serif; font-size:14px">
+        Food → Dairy Products → Milk → Low-Fat Milk<br>
+        Food → Bakery Products → Bread → Whole Wheat Bread
+      </div>
+      <table class="tbl" style="margin-top:12px">
+        <tr><th>Rule Type</th><th>Example</th><th>Abstraction Level</th></tr>
+        <tr><td>Single-Level</td><td>{Milk} → {Bread}</td><td>Item level</td></tr>
+        <tr><td>Multilevel (High)</td><td>{Dairy Products} → {Bakery Products}</td><td>Category level</td></tr>
+        <tr><td>Multilevel (Low)</td><td>{Low-Fat Milk} → {Whole Wheat Bread}</td><td>Sub-item level</td></tr>
+      </table>
+    </div>
+
+    <div class="sub">
+      <h3>Why Multilevel Rules?</h3>
+      <ul class="b">
+        <li><strong>More Insightful:</strong> Discovers both general trends and specific patterns.</li>
+        <li><strong>Better Decision Making:</strong> Useful for inventory management, marketing, and recommendations.</li>
+        <li><strong>Avoids Missing Patterns:</strong> Some patterns only appear at higher levels (individual items may not be frequent enough).</li>
+      </ul>
+    </div>
+
+    <div class="sub">
+      <h3>Approaches for Multilevel Mining</h3>
+      <div class="dl">
+        <div class="di" style="border-color:var(--accent2)">
+          <div class="term">a) Top-Down Approach (Apriori-Based)</div>
+          <div class="def">
+            • Start mining at the <strong>highest (most general) level</strong> first.<br>
+            • If a pattern is frequent at the top level, drill down to find more specific patterns.<br>
+            • Uses <strong>different minimum support thresholds per level</strong> (MSD — Multiple Support Difference).<br>
+            • Higher levels need higher support; lower levels need lower support.<br>
+            <strong>Example:</strong> Min support for "Dairy Products" = 5%, for "Cheese" = 2%
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent2)">
+          <div class="term">b) Bottom-Up Approach (FP-Growth-Based)</div>
+          <div class="def">
+            • Start mining at the <strong>lowest (most specific) level</strong> first.<br>
+            • Use <strong>generalization techniques</strong> to merge specific patterns into higher-level rules.<br>
+            • Faster than top-down because it avoids candidate generation.<br>
+            <strong>Example:</strong> {Whole Milk, Butter} → {Bread} generalized to {Dairy} → {Bakery}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="co info">
+      <strong>💡 Key Challenge</strong>
+      Higher-level items are more general and thus appear more frequently. Support thresholds must be adjusted per level to avoid trivial rules at higher levels and missing patterns at lower levels.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 9. MULTIDIMENSIONAL ASSOCIATION RULES -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c3" id="multidim">
+  <div class="sc-head">
+    <div class="sc-icon">🧊</div>
+    <h2>9. Mining Multidimensional Association Rules</h2>
+  </div>
+  <div class="sc-body">
+    <p>Traditional association rule mining considers only <em>items in transactions</em>. <strong>Multidimensional Association Rule Mining</strong> incorporates multiple attributes (dimensions) such as age, gender, location, income, and time — giving much richer and more actionable insights.</p>
+
+    <div class="sub">
+      <h3>Traditional vs Multidimensional Rules</h3>
+      <div class="g2">
+        <div class="mc">
+          <div class="mc-t" style="color:var(--muted)">Traditional Rule</div>
+          <p style="font-family:monospace; font-size:13px; color:var(--accent3)">{Milk, Bread} → {Butter}<br>(Support=30%, Confidence=80%)</p>
+          <p>Only items in the transaction are considered.</p>
+        </div>
+        <div class="mc">
+          <div class="mc-t" style="color:var(--accent3)">Multidimensional Rule</div>
+          <p style="font-family:monospace; font-size:13px; color:var(--accent3)">(Age=20-30, Gender=Male, Location=Urban) → (Buys=Sports Shoes)<br>(Support=15%, Confidence=70%)</p>
+          <p>Multiple customer attributes are used alongside items.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Types of Multidimensional Association Rules</h3>
+      <div class="dl">
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">1. Inter-Dimension Rules</div>
+          <div class="def">Relationships between <em>different dimensions</em>.<br><strong>Example:</strong> (Education=Graduate, Income=High) → (Buys=Luxury Car)</div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">2. Hybrid-Dimension Rules</div>
+          <div class="def">Mix of categorical attributes AND item-based transactions.<br><strong>Example:</strong> (Age=25-40, Location=USA) → {Buys=Smartphone, Laptop}</div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">3. Intra-Dimension Rules</div>
+          <div class="def">Patterns within the <em>same dimension</em>.<br><strong>Example:</strong> (Product Category=Electronics) → (Buys=Laptop, Smartphone)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Techniques for Multidimensional Mining</h3>
+      <div class="dl">
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">a) Generalized Apriori Algorithm</div>
+          <div class="def">Treats categorical attributes as items. Prunes infrequent attribute combinations using the apriori property. Example rule: (Age=30-40, Income=Medium) → (Buys=Smartwatch) at Support=12%, Confidence=60%.</div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">b) FP-Growth</div>
+          <div class="def">Eliminates candidate generation. Constructs an FP-Tree across multiple dimensions. Much faster for large multidimensional datasets. Example: (Region=Asia, Payment=Credit Card) → (Buys=Smart TV) at Support=10%, Confidence=75%.</div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">c) Constraint-Based Mining</div>
+          <div class="def">Users apply specific constraints (age range, price range, location) to focus only on rules of interest. Reduces noise. Example: Only mine rules for customers aged 18-35, purchases above $500.</div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">d) OLAP-Based Data Cube Approach</div>
+          <div class="def">Store sales data in a multidimensional cube with dimensions like Time, Product, Location. Use drill-down (more specific) or roll-up (more general). Example: (Month=December, Location=USA) → (Buys=Winter Jackets) at Support=20%, Confidence=85%.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 10. CORRELATION ANALYSIS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c5" id="correlation">
+  <div class="sc-head">
+    <div class="sc-icon">📈</div>
+    <h2>10. Correlation Analysis</h2>
+  </div>
+  <div class="sc-body">
+    <p><strong>Correlation Analysis</strong> measures the <em>relationship between two or more variables</em> in a dataset. It helps understand dependencies, identify trends, and improve decision-making. It plays a key role in feature selection, association rule mining, anomaly detection, and market analysis.</p>
+
+    <div class="sub">
+      <h3>Types of Correlation</h3>
+      <div class="g3">
+        <div class="mc">
+          <div class="mc-t" style="color:var(--accent2)">Positive Correlation ↗</div>
+          <p>Both variables increase together.<br><em>Example: More study time → Higher test score</em></p>
+        </div>
+        <div class="mc">
+          <div class="mc-t" style="color:#fb7185">Negative Correlation ↘</div>
+          <p>One increases, the other decreases.<br><em>Example: Higher car speed → Less travel time</em></p>
+        </div>
+        <div class="mc">
+          <div class="mc-t" style="color:var(--muted)">No Correlation →</div>
+          <p>No meaningful relationship.<br><em>Example: Height vs. phone number</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Measures of Correlation</h3>
+      <div class="dl">
+        <div class="di" style="border-color:var(--accent5)">
+          <div class="term">a) Pearson Correlation Coefficient (r)</div>
+          <div class="def">
+            Measures <strong>linear correlation</strong> between two continuous variables.<br>
+            Range: −1 to +1 where:<br>
+            &nbsp;&nbsp;• r = +1 → Perfect positive correlation<br>
+            &nbsp;&nbsp;• r = 0 → No correlation<br>
+            &nbsp;&nbsp;• r = −1 → Perfect negative correlation<br>
+            <strong>Used when:</strong> Data is continuous and normally distributed.
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent5)">
+          <div class="term">b) Spearman's Rank Correlation (ρ)</div>
+          <div class="def">
+            Measures <strong>monotonic relationships</strong> (not necessarily linear).<br>
+            Used when data is <strong>ordinal (ranked)</strong>.<br>
+            Formula: ρ = 1 − (6 Σd²ᵢ) / (n(n²−1)) where dᵢ = difference between ranks of corresponding values.<br>
+            <strong>Used when:</strong> Data is ranked/ordinal or not normally distributed.
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent5)">
+          <div class="term">c) Chi-Square Test (χ²)</div>
+          <div class="def">
+            Used to find relationships between <strong>categorical variables</strong>.<br>
+            Answers: "Are the two variables independent or related?"<br>
+            Formula: χ² = Σ [(Observed − Expected)² / Expected]<br>
+            <strong>Used when:</strong> Both variables are categorical (e.g., gender vs. product preference).
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent5)">
+          <div class="term">d) Kendall's Tau (τ)</div>
+          <div class="def">
+            Measures strength of <strong>ordinal associations</strong> between two variables.<br>
+            Similar to Spearman's rank but more <strong>robust for small datasets with tied ranks</strong>.<br>
+            <strong>Used when:</strong> Small dataset, many tied ranks, or when Spearman may be unreliable.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Quick Comparison Table</h3>
+      <table class="tbl">
+        <tr><th>Method</th><th>Data Type</th><th>Measures</th><th>Range</th></tr>
+        <tr><td>Pearson (r)</td><td>Continuous</td><td>Linear relationship</td><td>−1 to +1</td></tr>
+        <tr><td>Spearman (ρ)</td><td>Ordinal / Ranked</td><td>Monotonic relationship</td><td>−1 to +1</td></tr>
+        <tr><td>Chi-Square (χ²)</td><td>Categorical</td><td>Independence / dependence</td><td>0 to ∞</td></tr>
+        <tr><td>Kendall's Tau (τ)</td><td>Ordinal</td><td>Ordinal association</td><td>−1 to +1</td></tr>
+      </table>
+    </div>
+
+    <div class="sub">
+      <h3>Applications of Correlation Analysis</h3>
+      <div class="g2">
+        <div class="mc"><div class="mc-t" style="color:var(--accent5)">Feature Selection</div><p>Identify most relevant attributes for machine learning models.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent5)">Market Basket Analysis</div><p>Find correlated products: laptops + mouse + keyboard.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent5)">Fraud Detection</div><p>Detect unusual patterns in financial transactions.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent5)">Healthcare</div><p>Identify correlations between lifestyle factors and diseases.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent5)">Stock Market</div><p>Find relationships between stock prices, inflation, and interest rates.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent5)">Social Sciences</div><p>Study relationships between socioeconomic factors and outcomes.</p></div>
+      </div>
+    </div>
+
+    <div class="co info">
+      <strong>⚠️ Correlation vs Causation</strong>
+      Correlation does NOT imply causation. Two variables can be correlated (e.g., ice cream sales and drowning rates both increase in summer) without one causing the other (both are caused by summer heat). Always interpret correlation carefully!
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 11. CONSTRAINT-BASED ASSOCIATION MINING -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="sc c9" id="constraint">
+  <div class="sc-head">
+    <div class="sc-icon">🔧</div>
+    <h2>11. Constraint-Based Association Mining</h2>
+  </div>
+  <div class="sc-body">
+    <p><strong>Constraint-Based Association Mining</strong> is an advanced approach where users define specific <em>constraints</em> to focus the mining process on patterns of interest — instead of generating ALL possible rules (most of which may be irrelevant or useless).</p>
+
+    <div class="co warn">
+      <strong>Motivation</strong>
+      Standard Apriori or FP-Growth generates thousands of rules. A store manager might only care about rules for electronics above $100. Constraints filter out uninteresting rules before or during mining, saving time and improving relevance.
+    </div>
+
+    <div class="sub">
+      <h3>Why Use Constraints?</h3>
+      <ul class="b">
+        <li><strong>Focus on relevant rules</strong> that match specific business needs.</li>
+        <li><strong>Reduce computational complexity</strong> by pruning irrelevant itemsets early.</li>
+        <li><strong>Handle large datasets efficiently</strong> — only compute what matters.</li>
+        <li><strong>Give user control</strong> over the mining process.</li>
+      </ul>
+    </div>
+
+    <div class="sub">
+      <h3>Types of Constraints</h3>
+      <div class="dl">
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">1. Knowledge-Based Constraints</div>
+          <div class="def">
+            Use prior domain knowledge to restrict the search space.<br>
+            <strong>Examples:</strong>
+            <ul>
+              <li>"Find associations only between electronic items."</li>
+              <li>"Ignore rules involving low-cost products."</li>
+            </ul>
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">2. Data Constraints</div>
+          <div class="def">
+            Based on attributes like price, quantity, category, or time.<br>
+            <strong>Examples:</strong>
+            <ul>
+              <li>"Find associations only for transactions above $100."</li>
+              <li>"Consider purchases only from weekends."</li>
+            </ul>
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">3. Aggregate Constraints</div>
+          <div class="def">
+            Based on aggregated values like sum, count, or average across items.<br>
+            <strong>Examples:</strong>
+            <ul>
+              <li>"Find product sets where the total price exceeds $200."</li>
+              <li>"Consider items that appear in at least 500 transactions."</li>
+            </ul>
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">4. Length Constraints</div>
+          <div class="def">
+            Controls the size (number of items) in generated itemsets or rules.<br>
+            <strong>Examples:</strong>
+            <ul>
+              <li>"Find association rules with exactly 3 items."</li>
+              <li>"Exclude rules with more than 4 items."</li>
+            </ul>
+          </div>
+        </div>
+        <div class="di" style="border-color:var(--accent3)">
+          <div class="term">5. Hierarchical Constraints</div>
+          <div class="def">
+            Mine at different levels of abstraction in category hierarchies.<br>
+            <strong>Examples:</strong>
+            <ul>
+              <li>"Find associations between broad product categories (dairy, beverages) instead of individual items."</li>
+              <li>"Analyze patterns at brand level instead of product level."</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>Full Example: Constraint-Based Mining in Electronics Retail</h3>
+      <h4>Step 1: Sample Transactions</h4>
+      <table class="tbl">
+        <tr><th>Transaction ID</th><th>Items Purchased</th></tr>
+        <tr><td>1</td><td>Laptop ($800), Mouse ($20), Keyboard ($50)</td></tr>
+        <tr><td>2</td><td>Smartphone ($600), Headphones ($150)</td></tr>
+        <tr><td>3</td><td>Laptop ($800), Smartphone ($600), TV ($1000)</td></tr>
+        <tr><td>4</td><td>TV ($1000), Sound System ($500)</td></tr>
+        <tr><td>5</td><td>Smartphone ($600), Charger ($30)</td></tr>
+      </table>
+
+      <h4>Step 2: Apply Constraints</h4>
+      <ul class="b">
+        <li><strong>Category constraint:</strong> Only consider electronics.</li>
+        <li><strong>Price constraint:</strong> Ignore items below $100 → Removes Mouse, Keyboard, Charger.</li>
+      </ul>
+
+      <h4>Step 3: Generate Frequent Itemsets (after constraints)</h4>
+      <table class="tbl">
+        <tr><th>Itemset</th><th>Support</th><th>Meets Threshold?</th></tr>
+        <tr><td>{Laptop, Smartphone}</td><td>40%</td><td>✅</td></tr>
+        <tr><td>{TV, Sound System}</td><td>30%</td><td>✅</td></tr>
+        <tr><td>{Smartphone, Headphones}</td><td>20%</td><td>❌ (below threshold)</td></tr>
+      </table>
+
+      <h4>Step 4: Generate Association Rules</h4>
+      <table class="tbl">
+        <tr><th>Rule</th><th>Confidence</th><th>Interpretation</th></tr>
+        <tr><td>Laptop → Smartphone</td><td>75%</td><td>75% of laptop buyers also buy a smartphone</td></tr>
+        <tr><td>TV → Sound System</td><td>80%</td><td>80% of TV buyers also buy a sound system</td></tr>
+      </table>
+    </div>
+
+    <div class="sub">
+      <h3>Real-World Applications</h3>
+      <div class="g2">
+        <div class="mc"><div class="mc-t" style="color:var(--accent3)">🏬 Retail</div><p>Find patterns only in high-value transactions. Identify seasonal trends (summer vs winter).</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent3)">🏥 Healthcare</div><p>Analyze disease patterns only for specific age groups. Find smoking &amp; lung disease correlation.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent3)">💳 Fraud Detection</div><p>Detect fraudulent transactions above a threshold. Spot suspicious banking activity patterns.</p></div>
+        <div class="mc"><div class="mc-t" style="color:var(--accent3)">🌐 Web Mining</div><p>Analyze trends only in specific geographic regions. Identify hashtags appearing 1000+ times.</p></div>
+      </div>
+    </div>
+
+    <div class="co tip">
+      <strong>Constraint-Based vs Standard Mining — Key Difference</strong>
+      Standard mining: Generate ALL rules, then filter. &nbsp;|&nbsp; Constraint-based: Filter DURING mining. Constraint-based is more efficient because it prunes the search space early — irrelevant candidates are never even generated.
+    </div>
+  </div>
+</div>
+
+<!-- QUICK REVISION CARD -->
+<div class="sc c1">
+  <div class="sc-head">
+    <div class="sc-icon">⚡</div>
+    <h2>Quick Revision — Key Points to Remember</h2>
+  </div>
+  <div class="sc-body">
+    <div class="g2">
+      <div class="mc">
+        <div class="mc-t" style="color:var(--accent1)">📐 Formulas</div>
+        <ul class="b">
+          <li>Support(A⇒B) = Txns(A∩B) / Total Txns</li>
+          <li>Confidence(A⇒B) = Support(A,B) / Support(A)</li>
+          <li>Lift(A⇒B) = Confidence(A⇒B) / Support(B)</li>
+          <li>Lift &gt; 1 = positive correlation</li>
+        </ul>
+      </div>
+      <div class="mc">
+        <div class="mc-t" style="color:var(--accent2)">🌳 Algorithms</div>
+        <ul class="b">
+          <li>Apriori: bottom-up, candidate generation, multiple scans</li>
+          <li>FP-Growth: 2 scans, FP-Tree, no candidates</li>
+          <li>ECLAT: vertical TID sets, set intersection</li>
+        </ul>
+      </div>
+      <div class="mc">
+        <div class="mc-t" style="color:var(--accent3)">📌 Apriori Property</div>
+        <ul class="b">
+          <li>If X is frequent → all subsets of X are frequent</li>
+          <li>If subset of X is infrequent → X is infrequent (prune!)</li>
+          <li>This is also called Anti-Monotone Property</li>
+        </ul>
+      </div>
+      <div class="mc">
+        <div class="mc-t" style="color:var(--accent4)">🔒 Closed Itemsets</div>
+        <ul class="b">
+          <li>X is closed if no superset has same support</li>
+          <li>Compact but lossless representation</li>
+          <li>Fewer itemsets, same knowledge</li>
+        </ul>
+      </div>
+      <div class="mc">
+        <div class="mc-t" style="color:var(--accent5)">📈 Correlation</div>
+        <ul class="b">
+          <li>Pearson: linear, continuous data</li>
+          <li>Spearman: monotonic, ordinal data</li>
+          <li>Chi-Square: categorical data</li>
+          <li>Kendall's Tau: small datasets with ties</li>
+        </ul>
+      </div>
+      <div class="mc">
+        <div class="mc-t" style="color:var(--accent6)">🔧 Constraint Types</div>
+        <ul class="b">
+          <li>Knowledge-based (domain rules)</li>
+          <li>Data constraints (price, time, category)</li>
+          <li>Aggregate constraints (sum, count, avg)</li>
+          <li>Length constraints (itemset size)</li>
+          <li>Hierarchical constraints (abstraction level)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>
